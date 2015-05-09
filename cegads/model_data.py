@@ -1,0 +1,64 @@
+import pandas as pd
+
+class ModelData(object):
+    """A class to represent model source data
+    Can be used to manipulate data before loading it into a model
+    """
+    def __init__(self, path):
+        """load data from a file"""
+        df = pd.read_csv(path, parse_dates={'Date': ['Time']})
+        df = df.set_index('Date')
+        self._data = df
+
+    def raw(self, index):
+        """Access a column as is"""
+        return self._data[index]
+
+    def keys(self):
+        """Inspect the available columns"""
+        return self._data.columns
+
+    def interpolated(self, index, freq, method):
+        """Access data interpolated to chosen frequency"""
+        s = self._data[index]
+        #add midnight to the end
+        s[s.index[0] + pd.DateOffset(1)] = s[0]
+        #interpolate half hourly slots and return all but the last midnight
+        return s.resample(freq).interpolate(method)[:-1]
+
+    def half_hourly(self, index, method='linear'):
+        return self.interpolated(index, '30Min', method)
+
+if __name__ == "__main__":
+    import sys
+    import os.path
+    from matplotlib import pyplot as plt
+
+    args = sys.argv
+    if len(args) != 2:
+        print("only one argument - the path to data - is allowed.")
+        exit()
+
+    path = args[1]
+    if not os.path.isfile(path):
+        print("cannot find file at {}".format(path))
+        exit()
+
+    md = ModelData(path)
+
+# ['Cold Appliances', 'Cooking', 'Lighting', 'Audiovisual', 'ICT', 'Washing/ drying/ dishwasher', 'Water heating', 'Heating', 'Other', 'Unknown', 'Showers']
+    index = 'Washing/ drying/ dishwasher'
+
+    # ck1 = md.raw('Cooking')
+    for method in ['linear', 'cubic', 'quadratic', 'pchip']:
+        ck = md.half_hourly(index, method=method)
+        plt.plot(ck.index, ck, label=method)
+    plt.legend(loc=2)
+    plt.savefig("interpolation.png")
+
+    plt.figure(2)
+    for key in md.keys():
+        ck = md.half_hourly(key, method='linear')
+        plt.plot(ck.index, ck, label=key)
+    plt.legend(loc=2)
+    plt.savefig("models.png")
