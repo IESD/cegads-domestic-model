@@ -23,7 +23,6 @@ path = resource_filename('cegads', 'data/daily profiles.csv')
 ```
 
 Now instantiate an `ApplianceFactory` with the data file and use it to create appliance models.
-note: the factory should generate singleton instances of model objects but does not yet do so.
 
 ```python
 f = ApplianceFactory(path)
@@ -34,7 +33,7 @@ h = Household(
     f('tumble_dryer')
 )
 ```
-
+All similar appliances share the same underlying model object so it is fine to generate large numbers of households in this way.
 Now we can use the convenient Household object to generate a dataset of events.
 
 ```python
