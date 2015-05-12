@@ -10,5 +10,5 @@ class Household(object):
     def events_as_timeseries(self, days):
         return pd.concat([a.events_as_timeseries(days) for a in self.appliances], axis=1)
 
-    def simulation(self, days):
-        return pd.concat([a.simulation(days) for a in self.appliances], axis=1)
+    def simulation(self, days, freq):
+        return pd.concat([a.simulation(days, freq) for a in self.appliances], axis=1)

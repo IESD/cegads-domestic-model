@@ -10,21 +10,19 @@ class ModelData(object):
         df = df.set_index('Date')
         self._data = df
 
-    def raw(self, index):
-        """Access a column as is"""
-        return self._data[index]
+    def total(self, index):
+        return self._data[index].sum()
 
-    def keys(self):
-        """Inspect the available columns"""
-        return self._data.columns
-
-    def interpolated(self, index, freq, method):
-        """Access data interpolated to chosen frequency"""
+    def profile(self, index, freq, method):
+        """Access normalised data interpolated to chosen frequency"""
         s = self._data[index]
         #add midnight to the end
         s[s.index[0] + pd.DateOffset(1)] = s[0]
         #interpolate half hourly slots and return all but the last midnight
-        return s.resample(freq).interpolate(method)[:-1]
+        s = s.resample(freq).interpolate(method)[:-1]
+        profile = (s / s.sum()).cumsum()
+        profile.name = 'profile'
+        return profile
 
     def half_hourly(self, index, method='linear'):
         return self.interpolated(index, '30Min', method)
