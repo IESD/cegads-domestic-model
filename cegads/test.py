@@ -13,7 +13,7 @@ h = Household(
     f('tumble_dryer', 120)
 )
 
-# generate a 7-day, half-hourly time series of consumption for each appliance
+# generate a 365-day, half-hourly time series of consumption for each appliance
 consumption = h.simulation(365, '30Min')
 
 consumption.to_csv("example_data.csv")
