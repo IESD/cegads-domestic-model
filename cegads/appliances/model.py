@@ -56,10 +56,14 @@ class ApplianceModel(object):
 
     def simulation(self, days, cycle_length, freq='30Min'):
         """given a cycle length, simulates actual consumption values at a given resolution"""
-        series = self.events_as_timeseries(days)
-        result = (series * self.daily_total).resample(freq, how="sum")
+        events = self.events_as_timeseries(days)
+        result = events
+        point_value = self.daily_total / cycle_length
+        for i in xrange(cycle_length):
+            delta = i - int(float(cycle_length)/2)
+            result = result | events.shift(delta)
+        result = (result * point_value).resample(freq, how="sum")
         return result
-#        raise NotImplementedError
 
 
 class ModelFactory(object):
