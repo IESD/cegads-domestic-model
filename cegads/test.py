@@ -8,12 +8,12 @@ path = resource_filename('cegads', 'data/daily profiles.csv')
 f = ApplianceFactory(path)
 
 h = Household(
-    f('washing_machine'),
-    f('dishwasher'),
-    f('tumble_dryer')
+    f('washing_machine', 240),
+    f('dishwasher', 60),
+    f('tumble_dryer', 120)
 )
 
-# generate a 7-day, half-hourly time series with events for the timing of usage for each appliance
-events = h.simulation(7, 120)
+# generate a 7-day, half-hourly time series of consumption for each appliance
+consumption = h.simulation(365, '30Min')
 
-print(events)
+consumption.to_csv("example_data.csv")

@@ -54,7 +54,7 @@ class ApplianceModel(object):
         result[raw_events] = True
         return result
 
-    def simulation(self, days, cycle_length, freq='30Min'):
+    def simulation(self, days, cycle_length, freq):
         """given a cycle length, simulates actual consumption values at a given resolution"""
         events = self.events_as_timeseries(days)
         result = events
@@ -77,17 +77,16 @@ class ModelFactory(object):
         self.models = {}
 
     def __call__(self, appliance):
-        try:
-            mapped_name = mapping[appliance]
-        except KeyError:
-            raise UnsupportedAppliance("{} not supported, try one of {}".format(appliance, ','.join(mapping.keys())))
-
         if appliance not in self.models.keys():
-            self.models[appliance] = self._get_model(appliance, mapped_name)    # generates a new model
+            try:
+                mapped_name = mapping[appliance]
+            except KeyError:
+                raise UnsupportedAppliance("{} not supported, try one of {}".format(appliance, ','.join(mapping.keys())))
+            self._load_model(appliance, mapped_name)    # generates a new model
         return self.models[appliance]
 
-    def _get_model(self, appliance, mapped_name):
+    def _load_model(self, appliance, mapped_name):
         profile = self.md.profile(mapped_name, self.freq, self.method)
         total = self.md.total(mapped_name)
-        self.models[mapped_name] = ApplianceModel(profile, total, appliance, self.freq)
-        return self.models[mapped_name]
+        self.models[appliance] = ApplianceModel(profile, total, appliance, self.freq)
+        # return self.models[mapped_name]
