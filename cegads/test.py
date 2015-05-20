@@ -17,3 +17,14 @@ h = Household(
 consumption = h.simulation(365, '30Min')
 
 consumption.to_csv("example_data.csv")
+
+df = consumption.groupby(consumption.index.time).sum()
+
+from matplotlib import pyplot as plt
+
+plt.plot(df.index, df)
+plt.xlabel("time of day")
+plt.ylabel("average consumption (Wh)")
+# plt.tight_layout()
+# plt.autoscale(axis='x')
+plt.savefig("tentatively_testing.png", dpi=600)
