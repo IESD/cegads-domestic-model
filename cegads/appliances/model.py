@@ -29,19 +29,25 @@ class ApplianceModel(object):
         # make an index from the data
         self.lookup = pd.Index(self.profile)
 
-    def events(self, days, start=None, random_data=None):
+    def events(self, days, profile=None, start=None, random_data=None):
         """return a simple list of events, drawn from the model"""
-        if not random_data:
-            # generate some randomness
-            random_data = np.random.random(days)
+        if profile is not None:
+            lookup = pd.Index(profile)
+        else:
+            lookup = self.lookup
+            profile = self.profile
 
         if not start:
             start = datetime.date.today()
 
+        if not random_data:
+            # generate some randomness
+            random_data = np.random.random(days)
+
         # find the index where each random number would fit
         # I think the random number is <1 so side='right' should be good
-        i = self.lookup.searchsorted(random_data, side='right')
-        raw_events = pd.DataFrame(self.profile.index[i].time, columns=['time'])     # get the times
+        i = lookup.searchsorted(random_data, side='right')
+        raw_events = pd.DataFrame(profile.index[i].time, columns=['time'])     # get the times
 
         # create a date range for the events
         raw_events['date'] = pd.date_range(start=start, periods=days)
@@ -54,10 +60,9 @@ class ApplianceModel(object):
         return pd.Index(raw_events['datetime'])
 
 
-
-    def events_as_timeseries(self, days):
+    def events_as_timeseries(self, days, **kwargs):
         """combine raw events into a complete time series"""
-        raw_events = self.events(days)
+        raw_events = self.events(days, **kwargs)
         # generate a daily index covering the period (including following midnight)
         index = pd.DatetimeIndex(pd.date_range(start=raw_events[0].date(), freq='D', periods=days+1))
         # expand into a half hourly dataset and knock the last one off (the extra midnight)
@@ -67,9 +72,9 @@ class ApplianceModel(object):
         result[raw_events] = True
         return result
 
-    def simulation(self, days, cycle_length, freq):
+    def simulation(self, days, cycle_length, freq, **kwargs):
         """given a cycle length, simulates actual consumption values at a given resolution"""
-        events = self.events_as_timeseries(days)
+        events = self.events_as_timeseries(days, **kwargs)
         result = events
         point_value = self.daily_total / cycle_length
         for i in range(cycle_length):   # In python 2 this generates a list - a (small?) waste of memory
