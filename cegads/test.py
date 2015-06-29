@@ -1,11 +1,7 @@
 from cegads import Household
 from cegads.appliances import ApplianceFactory
 
-from pkg_resources import resource_filename
-
-path = resource_filename('cegads', 'data/daily profiles.csv')
-
-f = ApplianceFactory(path)
+f = ApplianceFactory()
 
 h = Household(
     f('washing_machine', 240),

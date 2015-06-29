@@ -15,17 +15,10 @@ from cegads import Household
 from cegads.appliances import ApplianceFactory
 ```
 
-Then get the path to included data file using pkg_resources.
+Now instantiate an `ApplianceFactory` and use it to create appliances within a household.
 
 ```python
-from pkg_resources import resource_filename
-path = resource_filename('cegads', 'data/daily profiles.csv')
-```
-
-Now instantiate an `ApplianceFactory` with the data file and use it to create appliance models.
-
-```python
-f = ApplianceFactory(path)
+f = ApplianceFactory()
 
 h = Household(
     f('washing_machine'),
@@ -33,12 +26,10 @@ h = Household(
     f('tumble_dryer')
 )
 ```
+
 All similar appliances share the same underlying model object so it is fine to generate large numbers of households in this way.
-Now we can use the convenient Household object to generate a dataset of events.
+Now we can use the convenient Household object to simulate a 365-day, half-hourly timeseries.
 
 ```python
-events = h.events_as_timeseries(7)
+consumption = h.simulation(365, '30Min')
 ```
-
-This generates a 7-day, half-hourly time series with events for the timing of usage for each appliance.
-This is not the same as a full simulation. Simulation will include power and cycle duration and is coming soon.
