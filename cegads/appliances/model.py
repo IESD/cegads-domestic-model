@@ -11,7 +11,9 @@ class UnsupportedAppliance(CEGADSException): pass
 mapping = {
     'washing_machine': 'wet_appliances',
     'dishwasher': 'wet_appliances',
-    'tumble_dryer': 'wet_appliances'
+    'tumble_dryer': 'wet_appliances',
+    'Cold Appliances': 'Cold Appliances',
+    'Cooking': 'Cooking'
 }
 
 class ApplianceModel(object):
