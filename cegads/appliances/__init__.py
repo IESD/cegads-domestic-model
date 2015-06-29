@@ -1,5 +1,3 @@
-from pkg_resources import resource_filename
-
 from .model import ModelFactory
 
 class Appliance(object):
@@ -20,9 +18,7 @@ class Appliance(object):
 class ApplianceFactory(object):
     """A thing to make appliance instances using a given model factory
     """
-    def __init__(self, path=None, freq="1Min", method="cubic"):
-        if not path:
-            path = resource_filename('cegads', 'data/daily profiles.csv')
+    def __init__(self, path, freq="1Min", method="cubic"):
         self.model_factory = ModelFactory(path, freq, method)
 
     def __call__(self, appliance, cycle_length):

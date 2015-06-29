@@ -1,3 +1,5 @@
+from pkg_resources import resource_filename
+
 import pandas as pd
 
 class ModelData(object):
@@ -6,6 +8,10 @@ class ModelData(object):
     """
     def __init__(self, path):
         """load data from a file"""
+        if not path:
+            # Use the default data file unless an alternative file path is provided
+            path = resource_filename('cegads', 'data/daily profiles.csv')
+
         df = pd.read_csv(path, parse_dates={'Date': ['Time']})
         df = df.set_index('Date')
         self._data = df
