@@ -27,19 +27,30 @@ class ApplianceModel(object):
         # make an index from the data
         self.lookup = pd.Index(self.profile)
 
-    def events(self, days):
+    def events(self, days, start=None, random_data=None):
         """return a simple list of events, drawn from the model"""
-        # generate some randomness
-        seed = np.random.random(days)
+        if not random_data:
+            # generate some randomness
+            random_data = np.random.random(days)
+
+        if not start:
+            start = datetime.date.today()
 
         # find the index where each random number would fit
         # I think the random number is <1 so side='right' should be good
-        i = self.lookup.searchsorted(seed, side='right')
-        raw_events = self.profile.index[i]     # 7 values, all in the same day
+        i = self.lookup.searchsorted(random_data, side='right')
+        raw_events = pd.DataFrame(self.profile.index[i].time, columns=['time'])     # get the times
 
-        # spread them over different days
-        raw_events = pd.Index([(rt + datetime.timedelta(days=j)) for j, rt in enumerate(raw_events)])
-        return raw_events
+        # create a date range for the events
+        raw_events['date'] = pd.date_range(start=start, periods=days)
+
+        # combine the date and times via formatting as strings, combining and parsing
+        raw_events['date_string'] = raw_events['date'].apply(lambda x: x.strftime('%d-%m-%Y '))
+        raw_events['time_string'] = raw_events['time'].apply(lambda x: x.strftime('%H:%M'))
+        raw_events['datetime_string'] = raw_events.apply(lambda x: x.date_string + x.time_string, axis=1)
+        raw_events['datetime'] = raw_events.apply(lambda x: datetime.datetime.strptime(x.date_string + x.time_string, '%d-%m-%Y %H:%M'), axis=1)
+        return pd.Index(raw_events['datetime'])
+
 
 
     def events_as_timeseries(self, days):
