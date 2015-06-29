@@ -70,7 +70,7 @@ class ApplianceModel(object):
         events = self.events_as_timeseries(days)
         result = events
         point_value = self.daily_total / cycle_length
-        for i in xrange(cycle_length):
+        for i in range(cycle_length):   # In python 2 this generates a list - a (small?) waste of memory
             delta = i - int(float(cycle_length)/2)
             result = result | events.shift(delta)
         result = (result * point_value).resample(freq, how="sum")
