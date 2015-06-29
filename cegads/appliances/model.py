@@ -79,7 +79,9 @@ class ApplianceModel(object):
 
 class ModelFactory(object):
     """a source of models
-    generates reusable models on request"""
+    generates reusable models from model data in a file at path
+    frequency and interpolation method can be specified
+    """
 
     def __init__(self, path, freq, method):
         self.freq = freq
