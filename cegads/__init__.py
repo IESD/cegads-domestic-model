@@ -1,3 +1,4 @@
+from collections import defaultdict
 import pandas as pd
 
 class CEGADSException(Exception): pass
@@ -5,10 +6,20 @@ class CEGADSException(Exception): pass
 class Household(object):
     """a collection of appliances"""
     def __init__(self, *appliances):
-        self.appliances = appliances
+        self._names = defaultdict(int)
+        self.appliances = {}
+        for a in appliances:
+            name = self.name_for(a.model.name)
+            self.appliances[name] = a
 
-    def events_as_timeseries(self, days):
-        return pd.concat([a.events_as_timeseries(days) for a in self.appliances], axis=1)
+    def name_for(self, next_name):
+        self._names[next_name] += 1
+        return "{}_{}".format(next_name, self._names[next_name])
 
-    def simulation(self, days, freq):
-        return pd.concat([a.simulation(days, freq) for a in self.appliances], axis=1)
+    def events_as_timeseries(self, days, **kwargs):
+        keys = self.appliances.keys()
+        return pd.concat([self.appliances[key].events_as_timeseries(days, name=key, **kwargs) for key in keys], axis=1, names=keys)
+
+    def simulation(self, days, freq, **kwargs):
+        keys = self.appliances.keys()
+        return pd.concat([self.appliances[key].simulation(days, freq, name=key, **kwargs) for key in keys], axis=1, names=keys)
