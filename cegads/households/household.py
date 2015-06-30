@@ -1,7 +1,7 @@
 from collections import defaultdict
 import pandas as pd
 
-from .exceptions import CEGADSException
+from ..exceptions import CEGADSException
 
 class Household(object):
     """a collection of appliances"""
