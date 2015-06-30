@@ -13,7 +13,8 @@ mapping = {
     'dishwasher': 'wet_appliances',
     'tumble_dryer': 'wet_appliances',
     'Cold Appliances': 'Cold Appliances',
-    'Cooking': 'Cooking'
+    'Cooking': 'Cooking',
+    'Water heating': 'Water heating',
 }
 
 class ApplianceModel(object):
