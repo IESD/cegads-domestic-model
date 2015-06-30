@@ -1,0 +1,1 @@
+class CEGADSException(Exception): pass
