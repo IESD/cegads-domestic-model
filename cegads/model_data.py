@@ -1,10 +1,9 @@
-from cegads import CEGADSException
 from pkg_resources import resource_filename
 import os.path
 
 import pandas as pd
 
-class InvalidDataFileError(CEGADSException): pass
+from .exceptions import InvalidDataFileError
 
 class ModelData(object):
     """A class to represent model source data
