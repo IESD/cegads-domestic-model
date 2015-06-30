@@ -12,8 +12,8 @@ class Appliance(object):
     def __getattr__(self, name):
         return getattr(self.model, name)
 
-    def simulation(self, days, freq):
-        return self.model.simulation(days, self.cycle_length, freq)
+    def simulation(self, days, freq, **kwargs):
+        return self.model.simulation(days, self.cycle_length, freq, **kwargs)
 
 class ApplianceFactory(object):
     """A thing to make appliance instances using a given model factory
