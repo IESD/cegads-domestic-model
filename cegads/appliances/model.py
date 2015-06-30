@@ -29,7 +29,7 @@ class ApplianceModel(object):
         # make an index from the data
         self.lookup = pd.Index(self.profile)
 
-    def events(self, days, profile=None, start=None, random_data=None):
+    def events(self, days, profile=None, start=None, random_data=None, name=None):
         """return a simple list of events, drawn from the model"""
         if profile is not None:
             lookup = pd.Index(profile)
@@ -44,6 +44,8 @@ class ApplianceModel(object):
             # generate some randomness
             random_data = np.random.random(days)
 
+        if not name:
+            name = self.name
         # find the index where each random number would fit
         # I think the random number is <1 so side='right' should be good
         i = lookup.searchsorted(random_data, side='right')
@@ -57,7 +59,7 @@ class ApplianceModel(object):
         raw_events['time_string'] = raw_events['time'].apply(lambda x: x.strftime('%H:%M'))
         raw_events['datetime_string'] = raw_events.apply(lambda x: x.date_string + x.time_string, axis=1)
         raw_events['datetime'] = raw_events.apply(lambda x: datetime.datetime.strptime(x.date_string + x.time_string, '%d-%m-%Y %H:%M'), axis=1)
-        return pd.Index(raw_events['datetime'])
+        return pd.Index(raw_events['datetime'], name=name)
 
 
     def events_as_timeseries(self, days, **kwargs):
@@ -66,7 +68,7 @@ class ApplianceModel(object):
         # generate a daily index covering the period (including following midnight)
         index = pd.DatetimeIndex(pd.date_range(start=raw_events[0].date(), freq='D', periods=days+1))
         # expand into a half hourly dataset and knock the last one off (the extra midnight)
-        result = pd.Series(index=index, name=self.name).resample(self.freq)[:-1]
+        result = pd.Series(index=index, name=raw_events.name).resample(self.freq)[:-1]
         # set the data to false, overwrite our events with true
         result[:] = False
         result[raw_events] = True
