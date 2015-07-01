@@ -6,11 +6,11 @@ from ..exceptions import InvalidDataFileError, UnsupportedAppliance
 from ..households import Household
 
 class Scenario(object):
-    """scenarios determine the probability of households owning each type of appliance"""
+    """scenarios determine the probability of households owning each type of appliance
+    It acts much like a HouseholdFactory"""
 
     def __init__(self, appliance_factory, data):
         self._data = data
-        self._households = []
         self.appliance_factory = appliance_factory
 
     def household(self, requested_appliances):
