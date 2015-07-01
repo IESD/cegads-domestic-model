@@ -1,3 +1,6 @@
+from .model import ModelFactory
+from .appliance import Appliance
+
 class ApplianceFactory(object):
     """A thing to make appliance instances using a given model factory
     """

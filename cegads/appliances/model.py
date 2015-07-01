@@ -3,15 +3,14 @@ import pandas as pd
 import datetime
 
 from ..model_data import ModelData
-from .. import CEGADSException
-
-class UnsupportedAppliance(CEGADSException): pass
+from ..exceptions import UnsupportedAppliance
 
 # mapping between allowed API appliance names and columns in data file
 mapping = {
     'washing_machine': 'wet_appliances',
     'dishwasher': 'wet_appliances',
     'tumble_dryer': 'wet_appliances',
+    'washer_dryer': 'wet_appliances',
     'Cold Appliances': 'Cold Appliances',
     'Cooking': 'Cooking',
     'Water heating': 'Water heating',
