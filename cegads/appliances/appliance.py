@@ -1,3 +1,7 @@
+import logging
+
+log = logging.getLogger()
+
 class Appliance(object):
     """A specific appliance instance
     each appliance of a similar type will share the same underlying model object
@@ -11,4 +15,8 @@ class Appliance(object):
         return getattr(self.model, name)
 
     def simulation(self, days, freq, **kwargs):
+        log.debug("simulating {}".format(self))
         return self.model.simulation(days, self.cycle_length, freq, **kwargs)
+
+    def __repr__(self):
+        return "{}({})".format(self.model.name, self.cycle_length)

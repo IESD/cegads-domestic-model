@@ -7,19 +7,30 @@ class Household(object):
     """a collection of appliances"""
     def __init__(self, *appliances):
         self._names = defaultdict(int)
-        self.appliances = {}
+        self._appliances = {}
         for a in appliances:
             name = self.name_for(a.model.name)
-            self.appliances[name] = a
+            self._appliances[name] = a
+
+    def appliances(self):
+        """return a list of appliances"""
+        return self._appliances.values()
 
     def name_for(self, next_name):
         self._names[next_name] += 1
         return "{}_{}".format(next_name, self._names[next_name])
 
     def events_as_timeseries(self, days, **kwargs):
-        keys = self.appliances.keys()
-        return pd.concat([self.appliances[key].events_as_timeseries(days, name=key, **kwargs) for key in keys], axis=1, names=keys)
+        keys = self._appliances.keys()
+        if not keys:
+            return pd.DataFrame([])
+        return pd.concat([self._appliances[key].events_as_timeseries(days, name=key, **kwargs) for key in keys], axis=1, names=keys)
 
     def simulation(self, days, freq, **kwargs):
-        keys = self.appliances.keys()
-        return pd.concat([self.appliances[key].simulation(days, freq, name=key, **kwargs) for key in keys], axis=1, names=keys)
+        keys = self._appliances.keys()
+        if not keys:
+            return pd.DataFrame([])
+        return pd.concat([self._appliances[key].simulation(days, freq, name=key, **kwargs) for key in keys], axis=1, names=keys)
+
+    def __repr__(self):
+        return "Household(\n  {}\n)".format(",\n  ".join([str(a) for a in self.appliances()]))

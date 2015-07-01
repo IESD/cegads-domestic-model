@@ -13,6 +13,7 @@ class ModelData(object):
         """load data from a file"""
         if not path:
             # Use the default data file unless an alternative file path is provided
+            # data source: ECUK table 3.11
             path = resource_filename('cegads', 'data/daily profiles.csv')
 
         if not os.path.isfile(path):
