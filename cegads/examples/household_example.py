@@ -1,3 +1,5 @@
+from matplotlib import pyplot as plt
+
 from cegads import Household
 from cegads.appliances import ApplianceFactory
 
@@ -23,7 +25,7 @@ consumption1.to_csv("example_data.csv")
 df1 = consumption1.groupby(consumption1.index.time).sum()
 df2 = consumption2.groupby(consumption2.index.time).sum()
 
-from matplotlib import pyplot as plt
+
 
 for key in sorted(df1.columns):
     plt.plot(df1.index, df1[key], label=df1[key].name, color="red")
