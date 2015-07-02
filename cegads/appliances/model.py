@@ -48,41 +48,31 @@ class ApplianceModel(object):
             name = self.name
         # find the index where each random number would fit
         # I think the random number is <1 so side='right' should be good
-        i = lookup.searchsorted(random_data, side='right')
-        raw_events = pd.DataFrame(profile.index[i].time, columns=['time'])     # get the times
-
-        # create a date range for the events
-        raw_events['date'] = pd.date_range(start=start, periods=days)
-
-        # combine the date and times via formatting as strings, combining and parsing
-        raw_events['date_string'] = raw_events['date'].apply(lambda x: x.strftime('%d-%m-%Y '))
-        raw_events['time_string'] = raw_events['time'].apply(lambda x: x.strftime('%H:%M'))
-        raw_events['datetime_string'] = raw_events.apply(lambda x: x.date_string + x.time_string, axis=1)
-        raw_events['datetime'] = raw_events.apply(lambda x: datetime.datetime.strptime(x.date_string + x.time_string, '%d-%m-%Y %H:%M'), axis=1)
-        return pd.Index(raw_events['datetime'], name=name)
-
-
-    def events_as_timeseries(self, days, **kwargs):
-        """combine raw events into a complete time series"""
-        raw_events = self.events(days, **kwargs)
-        # generate a daily index covering the period (including following midnight)
-        index = pd.DatetimeIndex(pd.date_range(start=raw_events[0].date(), freq='D', periods=days+1))
-        # expand into a half hourly dataset and knock the last one off (the extra midnight)
-        result = pd.Series(index=index, name=raw_events.name).resample(self.freq)[:-1]
-        # set the data to false, overwrite our events with true
-        result[:] = False
-        result[raw_events] = True
-        return result
+        indices = lookup.searchsorted(random_data, side='right')
+        # add a series of days onto the dates
+        dates = pd.Series(profile.index[indices]) + pd.to_timedelta(np.arange(len(indices)), unit='d')
+        return pd.Index(dates, name=name).to_datetime()
 
     def simulation(self, days, cycle_length, freq, **kwargs):
         """given a cycle length, simulates actual consumption values at a given resolution"""
-        events = self.events_as_timeseries(days, **kwargs)
-        result = events
-        point_value = self.daily_total / cycle_length
-        for i in range(cycle_length):   # In python 2 this generates a list - a (small?) waste of memory
-            delta = i - int(float(cycle_length)/2)
-            result = result | events.shift(delta)
-        result = (result * point_value).resample(freq, how="sum")
+        events = self.events(days, **kwargs)
+
+        # create a constant timestep series covering the whole period
+        start = events[0].date()
+        end = start + datetime.timedelta(days=days)
+        result = pd.Series(0,
+            index=pd.date_range(start=start, end=end, freq=self.freq),
+            name=events.name
+        )
+
+        # construct an index into all the minutely timesteps in which the appliance is ON
+        index = pd.DatetimeIndex(
+            pd.Series(events.repeat(cycle_length)) + pd.to_timedelta(np.tile(((np.arange(cycle_length)-int(cycle_length/2))*60), 365), unit="s")
+        ).intersection(result.index)
+
+        # set the matching values to the minutely consumption (total/cycle_length)
+        result[index] = self.daily_total / cycle_length
+        result = result.resample(freq, how="sum")
         return result
 
 
