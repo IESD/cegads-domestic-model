@@ -12,6 +12,9 @@ class Household(object):
             name = self.name_for(a.model.name)
             self._appliances[name] = a
 
+    def __len__(self):
+        return len(self._appliances)
+
     def appliances(self):
         """return a list of appliances"""
         return self._appliances.values()
@@ -33,4 +36,4 @@ class Household(object):
         return pd.concat([self._appliances[key].simulation(days, freq, name=key, **kwargs) for key in keys], axis=1, names=keys)
 
     def __repr__(self):
-        return "Household(\n  {}\n)".format(",\n  ".join([str(a) for a in self.appliances()]))
+        return "{}({})".format(self.__class__.__name__, ", ".join([str(a) for a in self.appliances()]))
