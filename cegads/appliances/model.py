@@ -16,6 +16,7 @@ mapping = {
     'Water heating': 'Water heating',
 }
 
+
 class ApplianceModel(object):
     """The base appliance model
     Eats a consumption profile (one day) and a total daily consumption value
@@ -67,7 +68,7 @@ class ApplianceModel(object):
 
         # construct an index into all the minutely timesteps in which the appliance is ON
         index = pd.DatetimeIndex(
-            pd.Series(events.repeat(cycle_length)) + pd.to_timedelta(np.tile(((np.arange(cycle_length)-int(cycle_length/2))*60), 365), unit="s")
+            pd.Series(events.repeat(cycle_length)) + pd.to_timedelta(np.tile(((np.arange(cycle_length)-int(cycle_length/2))*60), days), unit="s")
         ).intersection(result.index)
 
         # set the matching values to the minutely consumption (total/cycle_length)
