@@ -17,9 +17,10 @@ class Scenario(object):
         """generate a household with the requested appliances"""
         appliances = []
         for appliance, cycle_length in requested_appliances:
-            per_household = self._data[appliance]
-            if not per_household:
-                raise UnsupportedAppliance("This scenario doesn't include ownership data for the requested appliance [{}]".format(appliance))
+            try:
+                per_household = self._data[appliance]
+            except KeyError:
+                raise UnsupportedAppliance("This scenario doesn't include ownership data for the requested appliance '{}'".format(appliance))
             while per_household > 0:
                 if random() <= per_household:
                     a = self.appliance_factory(appliance, cycle_length)
