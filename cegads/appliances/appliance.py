@@ -19,4 +19,4 @@ class Appliance(object):
         return self.model.simulation(days, self.cycle_length, freq, **kwargs)
 
     def __repr__(self):
-        return "{}({}, {})".format(self.__class__.__name__, self.model.name, self.cycle_length)
+        return "{}({}, {}, {})".format(self.__class__.__name__, self.model.name, self.cycle_length, self.model.daily_total)
