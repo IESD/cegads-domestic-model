@@ -7,13 +7,12 @@ from ..exceptions import UnsupportedAppliance
 
 # mapping between allowed API appliance names and columns in data file
 mapping = {
-    'washing_machine': 'wet_appliances',
-    'dishwasher': 'wet_appliances',
-    'tumble_dryer': 'wet_appliances',
-    'washer_dryer': 'wet_appliances',
-    'Cold Appliances': 'Cold Appliances',
-    'Cooking': 'Cooking',
-    'Water heating': 'Water heating',
+    'Washing Machine': 'wet_appliances',
+    'Dishwasher': 'wet_appliances',
+    'Tumble Dryer': 'wet_appliances',
+    'Washer-dryer': 'wet_appliances',
+    'Chest Freezer': 'Cold Appliances',
+    'Standard Light Bulb': 'Lighting',
 }
 
 
@@ -89,17 +88,20 @@ class ModelFactory(object):
         self.md = ModelData(path)
         self.models = {}
 
-    def __call__(self, appliance):
+    def __call__(self, appliance, daily_consumption=None):
         if appliance not in self.models.keys():
             try:
                 mapped_name = mapping[appliance]
             except KeyError:
-                raise UnsupportedAppliance("{} not supported, try one of {}".format(appliance, ','.join(mapping.keys())))
-            self._load_model(appliance, mapped_name)    # generates a new model
-        return self.models[appliance]
+                mapped_name = appliance
+            # try:
+            self._load_model(appliance, mapped_name, daily_consumption)    # generates a new model
+            # except SomeModelError:
+                # raise UnsupportedAppliance("{} not supported, try one of {}".format(appliance, ','.join(mapping.keys())))
+        return self.models[(appliance, daily_consumption)]
 
-    def _load_model(self, appliance, mapped_name):
+    def _load_model(self, appliance, mapped_name, daily_consumption):
         profile = self.md.profile(mapped_name, self.freq, self.method)
-        total = self.md.total(mapped_name)
-        self.models[appliance] = ApplianceModel(profile, total, appliance, self.freq)
+        total = daily_consumption or self.md.total(mapped_name)
+        self.models[(appliance, daily_consumption)] = ApplianceModel(profile, total, appliance, self.freq)
         # return self.models[mapped_name]
