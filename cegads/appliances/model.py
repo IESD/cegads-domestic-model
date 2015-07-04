@@ -51,7 +51,9 @@ class ApplianceModel(object):
         indices = lookup.searchsorted(random_data, side='right')
         # add a series of days onto the dates
         dates = pd.Series(profile.index[indices]) + pd.to_timedelta(np.arange(len(indices)), unit='d')
-        return pd.Index(dates, name=name).to_datetime()
+        dates = pd.Index(dates, name=name).to_datetime()
+        return dates.shift(1, start - dates[0].replace(microsecond=0, second=0, minute=0, hour=0))
+
 
     def simulation(self, days, cycle_length, freq, **kwargs):
         """given a cycle length, simulates actual consumption values at a given resolution"""
