@@ -33,3 +33,5 @@ Now we can use the convenient Household object to simulate a 365-day, half-hourl
 ```python
 consumption = h.simulation(365, '30Min')
 ```
+
+A detailed overview of the library can be found [here](https://github.com/IESD/cegads-domestic-model/blob/master/cegads/examples/Basic%20usage.ipynb)
