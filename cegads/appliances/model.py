@@ -38,7 +38,7 @@ class ApplianceModel(object):
             profile = self.profile
 
         if not start:
-            start = datetime.date.today()
+            start = datetime.datetime.now()
 
         if not random_data:
             # generate some randomness
@@ -52,7 +52,7 @@ class ApplianceModel(object):
         # add a series of days onto the dates
         dates = pd.Series(profile.index[indices]) + pd.to_timedelta(np.arange(len(indices)), unit='d')
         dates = pd.Index(dates, name=name).to_datetime()
-        return dates.shift(1, start - dates[0].replace(microsecond=0, second=0, minute=0, hour=0))
+        return dates.shift(1, start.replace(microsecond=0, second=0, minute=0, hour=0) - dates[0].replace(microsecond=0, second=0, minute=0, hour=0))
 
 
     def simulation(self, days, cycle_length, freq, **kwargs):
