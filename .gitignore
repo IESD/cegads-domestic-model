@@ -58,3 +58,6 @@ target/
 
 # images
 *.png
+
+# ipython
+*.ipynb_checkpoints
