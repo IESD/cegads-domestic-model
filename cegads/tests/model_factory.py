@@ -16,7 +16,8 @@ seed = [ 0.28190211,  0.14322136,  0.66798132,  0.59197138,  0.98314453,  0.1142
 
 class TestModelFactory(unittest.TestCase):
     def setUp(self):
-        self.mf = ModelFactory(None, "10Min", "linear")
+        self.freq = "10Min"
+        self.mf = ModelFactory(None, self.freq, "linear")
 
     def test_raises_on_invalid_appliance(self):
         self.assertRaises(UnsupportedAppliance, self.mf, invalid_appliance)
@@ -27,7 +28,8 @@ class TestModelFactory(unittest.TestCase):
         except UnsupportedAppliance:
             self.fail("getting a {} raised UnsupportedAppliance unexpectedly!".format(valid_appliance))
         self.assertIsInstance(model, ApplianceModel)
-
+        self.assertEqual(model.name, valid_appliance)
+        self.assertEqual(model.freq, self.freq)
 
 class TestApplianceModel(unittest.TestCase):
     def setUp(self):
