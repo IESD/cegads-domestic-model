@@ -3,7 +3,7 @@ import os.path
 
 import pandas as pd
 
-from .exceptions import InvalidDataFileError
+from .exceptions import InvalidDataFileError, UnsupportedAppliance
 
 class ModelData(object):
     """A class to represent model source data
@@ -24,11 +24,18 @@ class ModelData(object):
         self._data = df
 
     def total(self, index):
-        return self._data[index].sum()
+        try:
+            return self._data[index].sum()
+        except KeyError as e:
+            raise UnsupportedAppliance("Unknown appliance {}".format(e))
 
     def profile(self, index, freq, method):
         """Access normalised data interpolated to chosen frequency"""
-        s = self._data[index]
+        try:
+            s = self._data[index]
+        except KeyError as e:
+            raise UnsupportedAppliance("Unknown appliance {}".format(e))
+
         #add midnight to the end
         s[s.index[0] + pd.DateOffset(1)] = s[0]
         #interpolate half hourly slots and return all but the last midnight
