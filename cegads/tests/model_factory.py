@@ -73,6 +73,7 @@ class TestApplianceModel(unittest.TestCase):
         days = 30
         cooking = self.factory('Cooking')
         events = self.appliance.events(days, start=datetime.datetime(2001, 1, 1), random_data=[0]*days, profile=cooking.profile)
+        self.assertEqual(len(events), days)    # length of full dataset is correct
         self.assertTrue((events.hour == 0).all())
         self.assertTrue((events.day == range(1, days+1)).all())
 
