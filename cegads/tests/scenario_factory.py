@@ -15,9 +15,6 @@ invalid_path = "invalid/path"
 
 class TestScenarioFactory(unittest.TestCase):
 
-    def test_raises_on_invalid_path(self):
-        self.assertRaises(InvalidDataFileError, ScenarioFactory, invalid_path)
-
     def test_raises_on_invalid_year(self):
         sf = ScenarioFactory()
         self.assertRaises(InvalidYearError, sf, invalid_year)
