@@ -8,6 +8,7 @@ from cegads.appliances.model import ModelFactory, UnsupportedAppliance, Applianc
 valid_appliance = 'Washing Machine'
 invalid_appliance = 'invalid_appliance'
 
+# just some random numbers to seed the simulation
 seed = [ 0.28190211,  0.14322136,  0.66798132,  0.59197138,  0.98314453,  0.1142276,
   0.63429356,  0.01911331,  0.98560073,  0.42638865,  0.05303925,  0.2785799,
   0.66517311,  0.99737475,  0.56541296,  0.36455504,  0.52069008,  0.26070156,
@@ -79,7 +80,7 @@ class TestApplianceModel(unittest.TestCase):
 
 
     def test_events(self):
-        """passing in a specific set of random data should produce events as expected, even with a different profile"""
+        """passing in a specific set of random data should produce events as expected"""
         days = 30
         events = self.appliance.events(days, start=datetime.datetime(2001, 1, 1), random_data=seed)
         result = [  630,  510, 1010,  930, 1400,
