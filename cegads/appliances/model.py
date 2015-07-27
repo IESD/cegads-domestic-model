@@ -96,14 +96,10 @@ class ModelFactory(object):
                 mapped_name = mapping[appliance]
             except KeyError:
                 mapped_name = appliance
-            # try:
             self._load_model(appliance, mapped_name, daily_consumption)    # generates a new model
-            # except SomeModelError:
-                # raise UnsupportedAppliance("{} not supported, try one of {}".format(appliance, ','.join(mapping.keys())))
         return self.models[(appliance, daily_consumption)]
 
     def _load_model(self, appliance, mapped_name, daily_consumption):
         profile = self.md.profile(mapped_name, self.freq, self.method)
         total = daily_consumption or self.md.total(mapped_name)
         self.models[(appliance, daily_consumption)] = ApplianceModel(profile, total, appliance, self.freq)
-        # return self.models[mapped_name]

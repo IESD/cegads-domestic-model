@@ -1,3 +1,9 @@
+"""Access the bundled ECUK data
+
+classes:
+ECUK - a convenient wrapper around the ECUK data
+"""
+
 from pkg_resources import resource_filename
 import pandas as pd
 
@@ -6,7 +12,8 @@ from .exceptions import InvalidYearError, InvalidDeviceError
 __all__ = ["ECUK"]
 
 class ECUK(object):
-    """wrap the ECUK data in a nice convenient interface"""
+    """wrap the ECUK data in a nice, convenient interface"""
+
     def __init__(self):
         table_3_08_path = resource_filename('cegads', 'data/number_of_households.csv')
         table_3_10_path = resource_filename('cegads', 'data/ECUK Table 3.10.csv')
@@ -57,14 +64,11 @@ class ECUK(object):
         indexer[self.table_3_12.index.names.index('Year')] = year
         apps = self.table_3_12.loc[tuple(indexer)] / self.table_3_08
 
-
     def consumption_per_appliance(self, year):
         indexer = [slice(None)]*len(self.table_3_10.index.names)
         indexer[self.table_3_10.index.names.index('Year')] = year
         cons = self.table_3_10.loc[tuple(indexer)]
         apps = self.table_3_12.loc[tuple(indexer)]
-        # df = pd.DataFrame([apps, cons])
-        # return df['WET']
         result = (cons / apps)
         result.name = "appliances per household"
         return result

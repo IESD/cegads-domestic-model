@@ -4,7 +4,6 @@ import os.path
 import pandas as pd
 
 from ..ECUK import ECUK
-from ..exceptions import ScenarioNotFound, InvalidYearError
 from ..appliances.factory import ApplianceFactory
 from ..scenarios.scenario import Scenario
 

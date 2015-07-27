@@ -1,3 +1,5 @@
+"""the cegads public API"""
+
 from .exceptions import *
 from .households import *
 from .scenarios import *
