@@ -3,7 +3,6 @@ import unittest
 from cegads import (
     Household,
     ScenarioFactory,
-    ScenarioNotFound,
     InvalidDataFileError,
     InvalidYearError,
     CEGADSException
