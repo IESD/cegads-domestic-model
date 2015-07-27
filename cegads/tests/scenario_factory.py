@@ -3,7 +3,6 @@ import unittest
 from cegads import (
     Scenario,
     ScenarioFactory,
-    ScenarioNotFound,
     InvalidDataFileError,
     InvalidYearError,
     CEGADSException
@@ -25,7 +24,7 @@ class TestScenarioFactory(unittest.TestCase):
 
     def test_raises_on_missing_year(self):
         sf = ScenarioFactory()
-        self.assertRaises(ScenarioNotFound, sf, missing_year)
+        self.assertRaises(InvalidYearError, sf, missing_year)
 
     def test_ok_given_valid_year(self):
         sf = ScenarioFactory()
