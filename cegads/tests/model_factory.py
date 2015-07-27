@@ -40,6 +40,11 @@ class TestModelFactory(unittest.TestCase):
             self.assertIsInstance(model, ApplianceModel)
             self.assertEqual(model.name, appliance_key)
             self.assertEqual(model.freq, self.freq)
+
+    def test_can_override_daily_consumption(self):
+        model = self.mf(valid_appliance, daily_consumption=100)
+        self.assertEqual(model.daily_total, 100)
+
 class TestApplianceModel(unittest.TestCase):
     def setUp(self):
         self.factory = ModelFactory(None, "10Min", "linear")
