@@ -10,9 +10,9 @@ from cegads import (
 
 valid_year = 2013
 valid_appliances = [
-    ('washing_machine', 20),
-    ('dishwasher', 20),
-    ('tumble_dryer', 20),
+    ('Washing Machine', 20),
+    ('Dishwasher', 20),
+    ('Tumble Dryer', 20),
 ]
 
 class TestScenario(unittest.TestCase):
