@@ -57,16 +57,6 @@ class TestApplianceModel(unittest.TestCase):
         self.assertTrue((events.hour == 0).all())
         self.assertTrue((events.day == range(1, days+1)).all())
 
-    def test_midnight_events_as_timeseries(self):
-        """passing in zeros should produce events at midnight, in a rigid 10-minutely timeseries"""
-        days = 365
-        events = self.appliance.events_as_timeseries(days, start=datetime.datetime(2001, 1, 1), random_data=[0]*days)
-        self.assertEqual(len(events), days * 24 * 6)    # length of full dataset is correct
-        i = events[events==True].index                  # get the event datetimes
-        self.assertEqual(len(i), days)                  # one event per day
-        self.assertTrue((i.hour == 0).all())            # events are all at midnight
-        self.assertTrue((i.minute == 0).all())          # events are all at midnight
-
     def test_midnight_events_in_simulation(self):
         """passing in zeros to a simulation with a 1-minute cycle should produce consumption only at midnight"""
         days = 365
