@@ -44,9 +44,6 @@ class ModelData(object):
         profile.name = 'profile'
         return profile
 
-    # def half_hourly(self, index, method='linear'):
-    #     return self.interpolated(index, '30Min', method)
-
 if __name__ == "__main__":
     import sys
     import os.path
