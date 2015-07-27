@@ -79,14 +79,13 @@ class ApplianceModel(object):
     def simulation(self, days, cycle_length, freq, **kwargs):
         """given a cycle length, simulates actual consumption values at a given resolution"""
         events = self.events(days, **kwargs)
-
         # create a constant timestep series covering the whole period
         start = events[0].date()
-        end = start + datetime.timedelta(days=days)
+        end = start + datetime.timedelta(days=days) # This creates an extra row
         result = pd.Series(0,
             index=pd.date_range(start=start, end=end, freq=self.freq),
             name=events.name
-        )
+        )[:-1] # remove last row here
 
         # construct an index into all the minutely timesteps in which the appliance is ON
         index = pd.DatetimeIndex(
