@@ -5,7 +5,7 @@ import numpy as np
 
 from cegads.appliances.model import ModelFactory, UnsupportedAppliance, ApplianceModel
 
-valid_appliance = 'washing_machine'
+valid_appliance = 'Washing Machine'
 invalid_appliance = 'invalid_appliance'
 
 seed = [ 0.28190211,  0.14322136,  0.66798132,  0.59197138,  0.98314453,  0.1142276,
