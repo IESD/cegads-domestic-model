@@ -36,7 +36,6 @@ mapping = {
     'Kettle': 'Cooking',
 }
 
-
 class ApplianceModel(object):
     """The base appliance model
     Eats a consumption profile (one day) and a total daily consumption value
@@ -109,6 +108,9 @@ class ModelFactory(object):
         self.method = method
         self.md = ModelData(path)
         self.models = {}
+
+    def appliance_keys(self):
+        return set(mapping.keys()) | set(mapping.values())
 
     def __call__(self, appliance, daily_consumption=None):
         if appliance not in self.models.keys():
