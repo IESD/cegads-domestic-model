@@ -31,6 +31,15 @@ class TestModelFactory(unittest.TestCase):
         self.assertEqual(model.name, valid_appliance)
         self.assertEqual(model.freq, self.freq)
 
+    def test_can_generate_all_appliances(self):
+        for appliance_key in self.mf.appliance_keys():
+            try:
+                model = self.mf(appliance_key)
+            except UnsupportedAppliance:
+                self.fail("getting a {} raised UnsupportedAppliance unexpectedly!".format(appliance_key))
+            self.assertIsInstance(model, ApplianceModel)
+            self.assertEqual(model.name, appliance_key)
+            self.assertEqual(model.freq, self.freq)
 class TestApplianceModel(unittest.TestCase):
     def setUp(self):
         self.factory = ModelFactory(None, "10Min", "linear")
