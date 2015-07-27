@@ -24,7 +24,7 @@ class TestScenario(unittest.TestCase):
         try:
             h = self.sc.household(valid_appliances)
         except CEGADSException as e:
-            self.fail("getting household '{}' raised {} unexpectedly!".format(valid_appliance, e.__class__.__name__))
+            self.fail("getting household '{}' raised {} unexpectedly!".format(valid_appliances, e.__class__.__name__))
         self.assertIsInstance(h, Household)
 
 
