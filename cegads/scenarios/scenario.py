@@ -20,10 +20,10 @@ class Scenario(object):
         """generate a household with the requested appliances"""
         appliances = []
         for appliance, cycle_length in requested_appliances:
-            try:
-                app_data = self._data[self._data.index==appliance].squeeze()
-            except KeyError:
+            appliance_filter = self._data.index==appliance
+            if not appliance_filter.any():
                 raise UnsupportedAppliance("This scenario doesn't include ownership data for the requested appliance '{}'".format(appliance))
+            app_data = self._data[appliance_filter].squeeze()
             per_household = app_data.appliances_per_household
             daily_consumption = app_data.consumption_per_appliance / 365
             while per_household > 0:
