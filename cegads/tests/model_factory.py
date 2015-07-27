@@ -48,7 +48,7 @@ class TestModelFactory(unittest.TestCase):
 
 class TestApplianceModel(unittest.TestCase):
     def setUp(self):
-        self.factory = ModelFactory(None, "10Min", "linear")
+        self.factory = ModelFactory(None, "1Min", "linear")
         self.appliance = self.factory(valid_appliance)
 
     def test_midnight_events(self):
@@ -83,12 +83,11 @@ class TestApplianceModel(unittest.TestCase):
         """passing in a specific set of random data should produce events as expected"""
         days = 30
         events = self.appliance.events(days, start=datetime.datetime(2001, 1, 1), random_data=seed)
-        result = [  630,  510, 1010,  930, 1400,
-           480,  970,   60, 1400,  760,
-           370,  630, 1010, 1430,  900,
-           700,  850,  610,  480,  120,
-          1310,  810,  790, 1130,  660,
-           740,    0,  690, 1310,  690]
+
+        result = [630, 512, 1015, 930, 1400, 482, 977, 72, 1405, 760,
+                  376, 627, 1012, 1433, 902, 702, 856, 612, 485, 132,
+                  1309, 808, 795, 1132, 663, 742, 5, 691, 1312, 689]
+
         self.assertTrue((events.hour*60 + events.minute == result).all())
 
     def test_events_with_alternative_profile(self):
@@ -96,13 +95,28 @@ class TestApplianceModel(unittest.TestCase):
         days = 30
         cooking = self.factory('Cooking')
         events = self.appliance.events(days, start=datetime.datetime(2001, 1, 1), random_data=seed, profile=cooking.profile)
-        result = [ 670,  490, 1040, 1000, 1340,
-                   460, 1020,  240, 1350,  830,
-                   380,  660, 1040, 1410,  980,
-                   750,  940,  640,  460,  300,
-                  1240,  890,  880, 1100,  710,
-                   800,   20,  740, 1240,  740]
+        result = [669, 493, 1038, 996, 1346, 461, 1020, 241, 1355, 826,
+                  381, 665, 1037, 1416, 979, 753, 945, 644, 463, 304,
+                  1238, 895, 878, 1098, 709, 802, 24, 740, 1241, 738]
+
         self.assertTrue((events.hour*60 + events.minute == result).all())
+
+    def test_total_consumption(self):
+        """
+        test that the square-wave produced in simulation has correct properties
+        passing in 0.5 to a simulation should produce a predictable square-wave
+        with no overlap at midnight
+
+        """
+        days = 32
+        cycle_length = 12
+        freq = "1Min"
+        data = self.appliance.simulation(days, cycle_length, freq, start=datetime.datetime(2001, 1, 1), random_data=[0.5]*days)
+        self.assertEqual(len(data), days * 24 * 60)                 # length of full dataset is correct
+        self.assertEqual(len(data[data > 0]), days * cycle_length)  # cycles are correct length
+        # each daily total is very close to the stated value
+        totals = data.groupby(data.index.date).sum()
+        self.assertTrue((abs(totals - self.appliance.daily_total) < 1e-10).all())
 
 
 if __name__ == "__main__":
