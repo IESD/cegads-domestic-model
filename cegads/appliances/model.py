@@ -7,12 +7,33 @@ from ..exceptions import UnsupportedAppliance
 
 # mapping between allowed API appliance names and columns in data file
 mapping = {
+    'Standard Light Bulb': 'Lighting',
+    'Halogen': 'Lighting',
+    'Fluorescent Strip Lighting': 'Lighting',
+    'Energy Saving Light Bulb': 'Lighting',
+    'LED': 'Lighting',
+    'Chest Freezer': 'Cold Appliances',
+    'Fridge-freezer': 'Cold Appliances',
+    'Refrigerator': 'Cold Appliances',
+    'Upright Freezer': 'Cold Appliances',
     'Washing Machine': 'wet_appliances',
+    'Washer-dryer': 'wet_appliances',
     'Dishwasher': 'wet_appliances',
     'Tumble Dryer': 'wet_appliances',
-    'Washer-dryer': 'wet_appliances',
-    'Chest Freezer': 'Cold Appliances',
-    'Standard Light Bulb': 'Lighting',
+    'TV': 'Audiovisual',
+    'Set Top Box': 'Audiovisual',
+    'DVD/VCR': 'Audiovisual',
+    'Games Consoles': 'Audiovisual',
+    'Power Supply Units': 'Audiovisual',
+    'Desktops': 'ICT',
+    'Laptops': 'ICT',
+    'Monitors': 'ICT',
+    'Printers': 'ICT',
+    'Multi-Function Devices': 'ICT',
+    'Electric Oven': 'Cooking',
+    'Electric Hob': 'Cooking',
+    'Microwave': 'Cooking',
+    'Kettle': 'Cooking',
 }
 
 
