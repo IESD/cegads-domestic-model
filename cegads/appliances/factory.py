@@ -10,3 +10,6 @@ class ApplianceFactory(object):
     def __call__(self, appliance, cycle_length, daily_consumption):
         model = self.model_factory(appliance, daily_consumption)
         return Appliance(model, cycle_length)
+
+    def appliance_keys(self):
+        return self.model_factory.appliance_keys()

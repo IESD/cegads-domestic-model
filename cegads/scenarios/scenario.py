@@ -13,6 +13,9 @@ class Scenario(object):
         self._data = data
         self.appliance_factory = appliance_factory
 
+    def appliance_keys(self):
+        return self.appliance_factory.appliance_keys()
+
     def __getattr__(self, name):
         return getattr(self._data, name)
 
