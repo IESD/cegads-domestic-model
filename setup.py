@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(name='cegads-domestic-model',
-    version='0.4.1',
+    version='0.5',
     description='An energy consumption model for domestic appliances',
     author='Graeme Stuart',
     author_email='gstuart@dmu.ac.uk',
