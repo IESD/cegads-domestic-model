@@ -11,7 +11,6 @@ The implementation is based on [`pandas`](http://pandas.pydata.org/) so you will
 
 ## Usage
 The intention is to allow for the easy generation of households which are collections of appliance models. Households are generated via scenarios which are aware of the national statistics for appliance ownership (a scenario represents a specific year from the data). Appliances are aware of the overall daily profile data and total annual consumption for the given scenario year.
-Households are in turn
 
 The code is becoming stable but we are still in the early development phase so the interface is subject to change.
 
