@@ -27,6 +27,7 @@ factory = ScenarioFactory()
 Now we can create a scenario for any year available in the data. Here I have chosen 2013.
 
 ```python
+# load data for 2013
 scenario = factory(2013)
 ```
 
@@ -42,6 +43,7 @@ The duty_cycle parameter determines how long the appliance operates for each day
 The timing of the operation is determined by the model.
 
 ```python
+# create a Washing Machine with an 80-minute duty cycle
 washing_machine = scenario.appliance('Washing Machine', 80)
 ```
 
@@ -53,6 +55,7 @@ The method also takes keyword arguments. Here I have set the start date of the s
 ```python
 from datetime import datetime
 start = datetime(2013, 1, 1)
+# a 365-day simulation at 30-minute resolution
 result = washing_machine.simulation(365, "30Min", start=start)
 ```
 
