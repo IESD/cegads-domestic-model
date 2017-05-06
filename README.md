@@ -1,7 +1,7 @@
 # cegads-domestic-model
 This library implements a simple domestic appliance model based on data from chapter three of the DECC ECUK publication (https://www.gov.uk/government/collections/energy-consumption-in-the-uk). and provides a convenient interface for generating household simulations at the appliance level.
 
-##Installation
+## Installation
 
 `pip install` **`[--upgrade]`** `cegads-domestic-model`
 
@@ -35,7 +35,7 @@ Scenario instances can be used to generate appliances (using `scenario.appliance
 and households (using `scenario.household()`).
 
 
-###Simulating appliances
+### Simulating appliances
 
 Creating appliances requires an appliance key to identify the type of appliance to create and a duty cycle (in minutes).
 A full list of available appliance keys can be accessed using the `scenario.appliance_keys()` method.
@@ -61,7 +61,7 @@ result = washing_machine.simulation(365, "30Min", start=start)
 
 The output of the simulation is a pandas Series with a datetime index.
 
-###Simulating households
+### Simulating households
 
 Scenario objects have access to ECUK statistics about appliance ownership. This makes creating a collection of households with the appropriate allocation of appliances easy.
 
